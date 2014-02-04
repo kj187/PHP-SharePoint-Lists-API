@@ -109,7 +109,7 @@ class StreamWrapperHttpAuth {
 				return $response;
 			}
 			else {
-				throw new Exception(curl_error($this->curlHandle), curl_errno($this->curlHandle));
+				throw new \Exception(curl_error($this->curlHandle), curl_errno($this->curlHandle));
 			}
 		}
 		else {
@@ -118,15 +118,15 @@ class StreamWrapperHttpAuth {
 					return $this->postRequest($path, CURLAUTH_NTLM);
 				}
 				else {
-					throw new Exception ('Access Denied', 401);
+					throw new \Exception ('Access Denied', 401);
 				}
 			}
 			else {
 				if (curl_errno($this->curlHandle) != 0) {
-					throw new Exception(curl_error($this->curlHandle), curl_errno($this->curlHandle));
+					throw new \Exception(curl_error($this->curlHandle), curl_errno($this->curlHandle));
 				}
 				else {
-					throw new Exception('Error', $info['http_code']);
+					throw new \Exception('Error', $info['http_code']);
 				}
 			}
 		}
