@@ -762,7 +762,7 @@ class SharePointAPI {
 	 * Query XML
 	 * Generates XML for WHERE Query
 	 *
-	 * @param Array $q array('<col>' => '<value_to_match_on>')
+	 * @param Array $q array('<col>' => '<value_to_match_on>') | array('<col>' => array('type' => 'Lookup', 'value' => '<value_to_match_on>'))
 	 * @return XML DATA
 	 */
 	private function whereXML (array $q) {
@@ -771,7 +771,11 @@ class SharePointAPI {
 
 		foreach ($q as $col => $value) {
 			$counter++;
-			$queryString .= '<Eq><FieldRef Name="' . $col . '" /><Value Type="Text">' . htmlspecialchars($value) . '</Value></Eq>';
+			if (is_array($value)) {
+				$queryString .= '<Eq><FieldRef Name="' . $col . '" ' . ($value['type'] == 'Lookup' ? 'LookupId="TRUE"':'') . ' /><Value Type="' . $value['type'] . '">' . htmlspecialchars($value['value']) . '</Value></Eq>';
+			} else {
+				$queryString .= '<Eq><FieldRef Name="' . $col . '" /><Value Type="Text">' . htmlspecialchars($value) . '</Value></Eq>';
+			}
 
 			// Add additional "and"s if there are multiple query levels needed.
 			if ($counter >= 2) {
