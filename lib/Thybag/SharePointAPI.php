@@ -398,7 +398,7 @@ class SharePointAPI {
 		$xml_query   = '';
 
 		// Setup Options
-		if ($query instanceof SPQueryObj) {
+		if ($query instanceof \Thybag\Service\QueryObjectService) {
 			$xml_query = $query->getCAML();
 		} else {
 			if (!is_null($view)) {
