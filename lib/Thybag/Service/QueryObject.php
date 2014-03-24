@@ -57,7 +57,7 @@ class QueryObjectService {
 	 *
 	 * @param $col column to test
 	 * @param $test comparsion type (=,!+,<,>)
-	 * @param $value to test with
+	 * @param $value to test with | array('type' => 'Lookup', 'value' => '<value_to_test_with>'))
 	 * @return Ref to self
 	 */
 	public function where ($col, $test, $val) {
@@ -70,7 +70,7 @@ class QueryObjectService {
 	 *
 	 * @param $col column to test
 	 * @param $test comparsion type (=,!+,<,>)
-	 * @param $value to test with
+	 * @param $value to test with | array('type' => 'Lookup', 'value' => '<value_to_test_with>'))
 	 * @return Ref to self
 	 */
 	public function and_where ($col, $test, $val) {
@@ -83,7 +83,7 @@ class QueryObjectService {
 	 *
 	 * @param $col column to test
 	 * @param $test comparsion type (=,!+,<,>)
-	 * @param $value to test with
+	 * @param $value to test with | array('type' => 'Lookup', 'value' => '<value_to_test_with>'))
 	 * @return Ref to self
 	 */
 	public function or_where ($col, $test, $val) {
@@ -145,7 +145,7 @@ class QueryObjectService {
 	 * @param	$rel	Relation AND/OR etc
 	 * @param	$col	column to test
 	 * @param	$test	comparsion type (=,!+,<,>)
-	 * @param	$value	value to test with
+	 * @param	$value	value to test with | array('type' => 'Lookup', 'value' => '<value_to_test_with>'))
 	 * @return	Ref to self
 	 * @throws	\Exception	Thrown if $test is unreconized
 	 */
@@ -162,7 +162,11 @@ class QueryObjectService {
 
 		// Create caml
 		$caml = $this->where_caml;
-		$content = '<FieldRef Name="' . $col . '" /><Value Type="Text">' . htmlspecialchars($value) . '</Value>' . PHP_EOL;
+		if (is_array($value)) {
+			$content = '<FieldRef Name="' . $col . '" ' . ($value['type'] == 'Lookup' ? 'LookupId="TRUE"':'') . '/><Value Type="' . $value['type'] . '">' . htmlspecialchars($value['value']) . '</Value>' . PHP_EOL;
+		} else {
+			$content = '<FieldRef Name="' . $col . '" /><Value Type="Text">' . htmlspecialchars($value) . '</Value>' . PHP_EOL;
+		}
 		$caml .= '<' . $test . '>' . $content . '</' . $test . '>';
 
 		// Attach relations
